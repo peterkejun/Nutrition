@@ -5,6 +5,7 @@ import pandas as pd
 app = flask.Flask(__name__)
 app.config['Debug'] = True
 
+# load datasets
 food_name_df = pd.read_csv('dataset/FOOD NAME.csv', encoding="utf-8")
 nutrition_amount_df = pd.read_csv('dataset/NUTRIENT AMOUNT.csv', encoding='utf-8')
 nutrition_name_df = pd.read_csv('dataset/NUTRIENT NAME.csv', encoding='utf-8').sort_values('NutrientID')
