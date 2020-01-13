@@ -1,0 +1,106 @@
+.App {
+    position: relative;
+    display: block;
+}
+
+.App h1, .App h2, .App h3, .App, .App h4, .App h5, .App h6 {
+    border-bottom: none;
+}
+
+#nav-bar {
+    display: flex;
+    align-content: center;
+    height: 52px;
+    padding: 0;
+    z-index: 3;
+    background-color: white;
+    border-bottom: solid #E7EEE8 1px;
+    top: 0;
+    position: fixed;
+    box-shadow: 0px 1px 3px -1px rgba(180,180,180,1);
+}
+
+#nav-bar-logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F9FBF9;
+    border-right: solid #E7EEE8 1px;
+}
+
+#nav-bar-logo-container div {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+#nav-bar-logo-title {
+    margin: 0 0 0 13px;
+    font-size: 15px;
+    font-weight: 800;
+    color: #4C8056;
+}
+
+#nav-bar-logo-img {
+    width: 40px;
+    height: 33px;
+}
+
+#nav-bar-search-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#nav-bar-search-img {
+    width: 20px;
+    height: 20px;
+    margin: 0 9px 0 35px;
+}
+
+#nav-bar-search-placeholder {
+    color: #4C8056;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+}
+
+#nav-bar-notification-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-left: solid #E7EEE8 1px;
+    border-right: solid #E7EEE8 1px;
+}
+
+#nav-bar-notification-img {
+    width: 20px;
+    height: auto;
+}
+
+#nav-bar-user-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    cursor: pointer;
+}
+
+#nav-bar-user-profile-img {
+    width: 35px;
+    height: 35px;
+    border-radius: 17px;
+    border: solid 1px black;
+    margin-left: 13px;
+}
+
+#nav-bar-user-title {
+    font-size: 14px;
+    font-weight: 200;
+    color: #565656;
+    margin: 0 9px 0 10px;
+}
+
+#nav-bar-collapse-button-img {
+    width: 8px;
+    height: 4px;
+}

@@ -1,0 +1,205 @@
+.display-container {
+    z-index: 0;
+    height: 100vh;
+    padding: 0;
+    margin-top: 52px;
+    /*position: fixed;*/
+}
+
+#nutripedia-container {
+    display: flex;
+}
+
+#nutripedia-center-wrapper {
+    /*position: fixed;*/
+    /*overflow-y: scroll;*/
+    padding: 0;
+}
+
+#nutripedia-header-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border-bottom: solid 1px #E7EEE8;
+    background-color: white;
+}
+
+#nutripedia-header-search-wrapper {
+    margin: 33px 35px;
+}
+
+#nutripedia-header-search-title {
+    color: #4C8056;
+    font-size: 25px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+#nutripedia-header-search-subtitle {
+    color: #9E9E9E;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+#search-bar-container {
+    height: 35px;
+    margin-bottom: 9px;
+}
+
+#nutripedia-header-browse-all-button {
+    color: #9E9E9E;
+    font-size: 14px;
+    font-weight: 400;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+}
+
+#nutripedia-header-browse-all-button:hover {
+    text-decoration: underline;
+    text-decoration-color: #9E9E9E;
+}
+
+#nutripedia-header-history-wrapper {
+    margin: 56px 84px;
+}
+
+#nutripedia-header-history-title {
+    color: #565656;
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 16px;
+}
+
+#nutripedia-header-history-nutrients-wrapper {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: space-between;
+    padding-left: 7px;
+}
+
+.nutrient-wrapper {
+    max-height: 16px;
+    margin-bottom: 14px;
+    max-width: 200px;
+    overflow-x: hidden;
+    margin-right: 44px;
+}
+
+.nutrient-title {
+    color: #527F72;
+    font-size: 14px;
+    font-weight: 700;
+    max-width: 200px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
+#nutripedia-right-wrapper {
+    height: 100vh;
+    background-color: #F9FBF9;
+    border-left: solid 1px #E7EEE8;
+    position: fixed;
+    width: 21%;
+    right: 0;
+}
+
+#nutripedia-right-list-wrapper {
+    height: 100%;
+    overflow-y: scroll;
+    padding: 30px 15px 100px 15px;
+}
+
+/*#nutripedia-right-list-wrapper:first-child {*/
+/*    margin-top: 30px;*/
+/*}*/
+
+.nutripedia-right-list-item {
+    color: #527F72;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 30px;
+    word-wrap: normal;
+    transition: 0.3s;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.nutripedia-right-list-item:hover {
+    background: rgba(82,127,114,0.15);
+    box-shadow: 0px 1px 8px -1px rgba(180,180,180,1);
+    color: #1A5947;
+}
+
+#nutripedia-display-wrapper {
+    display: flex;
+    background-color: #F4F4F4;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#nutripedia-display-wrapper .card-columns {
+    column-count: 3;
+    margin-top: 20px;
+}
+
+#nutripedia-display-wrapper .card {
+    /*height: 500px;*/
+    /*overflow-y: hidden;*/
+}
+
+#nutripedia-display-wrapper .card-img-top {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+.nutripedia-card-img-wrapper {
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px 30px 0 30px;
+}
+
+#nutripedia-display-wrapper .card-text {
+    height: 200px;
+    overflow-y: hidden;
+    text-overflow: ellipsis;
+}
+
+#nutripedia-header-history-no-entries-title {
+    color: #527F72;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+#nutripedia-wiki-page-wrapper {
+    margin-top: 20px;
+    width: 99%;
+    margin-left: 0.5%;
+    margin-bottom: 20px;
+    box-shadow: 0 0 4px 1px rgba(0,0,0,0.12);;
+    background-color: white;
+    padding: 5px 5px;
+}
+
+/*#nutripedia-wiki-page-wrapper img {*/
+/*    max-width: 100%;*/
+/*    height: auto;*/
+/*}*/
+
+#nutripedia-wiki-page-title {
+    color: #527F72;
+    font-size: 20px;
+    font-weight: 800;
+    margin: 10px 15px
+}
+
+

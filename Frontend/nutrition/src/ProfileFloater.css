@@ -1,0 +1,154 @@
+#profile-floater-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 300px;
+    background-color: #F9FBF9;
+    border: solid 1px #E7EEE8;
+    z-index: 2;
+    position: absolute;
+    top: 51px;
+    right: 10px;
+    box-shadow: 0px 1px 8px -1px rgba(180,180,180,1);
+}
+
+#profile-floater-header-wrapper {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: solid 1px #E7EEE8;
+    margin-top: 14px;
+    padding-bottom: 6px;
+    padding-left: 14px;
+    padding-right: 14px;
+}
+
+#profile-floater-header-logo-img {
+    width: 44px;
+    height: auto;
+    margin-right: 10px;
+}
+
+#profile-floater-header-title {
+    color: #527F72;
+    font-size: 17px;
+    font-weight: 900;
+    margin-left: 10px;
+    margin-right: 12px;
+}
+
+#profile-floater-input-container {
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-left: 14px;
+    padding-right: 14px;
+}
+
+.profile-floater-prompt-title {
+    font-size: 10px;
+    font-weight: 800;
+    color: #9E9E9E;
+    margin-bottom: 0;
+    padding: 0;
+    margin-right: 7px;
+}
+
+.profile-floater-form {
+    width: 100%;
+    background-color: white;
+    border: solid 1px #E7EEE8;
+    border-radius: 6px;
+    margin-top: 7px;
+    padding: 8px 15px;
+}
+
+.profile-floater-form::placeholder {
+    color: rgba(158,158,158,0.5);
+    font-size: 12px;
+}
+
+#profile-floater-or-wrapper {
+    width: 100%;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#profile-floater-or-break {
+    background-color: #E7EEE8;
+    height: 1px;
+}
+
+.profile-floater-button {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+#profile-floater-log-in-button {
+    margin-top: 7px;
+    background-color: #57A169;
+    color: white;
+}
+
+#profile-floater-sign-up-button {
+    background-color: #F9EAB0;
+    color: #565656;
+}
+
+#profile-floater-user-img {
+    width: 77px;
+    height: 77px;
+    border-radius: 38px;
+    border: solid 1px #565656;
+    margin-top: 13px;
+}
+
+#profile-floater-username-title {
+    font-size: 17px;
+    font-weight: 900;
+    color: #565656;
+    text-align: center;
+    max-width: 60%;
+    margin-top: 12px;
+    margin-bottom: 15px;
+}
+
+#profile-floater-user-info-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 14px;
+    padding-right: 14px;
+    width: 100%;
+}
+
+.profile-floater-button-wrapper {
+    border-top: solid 1px #E7EEE8;
+    width: 100%;
+    padding: 10px 14px;
+}
+
+#profile-floater-manage-button {
+    background-color: #527F72;
+    color: white;
+}
+
+#profile-floater-log-out-button {
+    background-color: #C76D5B;
+    color: white;
+}
+
+#profile-floater-sign-up-link {
+    width: 100%;
+}
