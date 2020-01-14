@@ -1,5 +1,4 @@
 import React from 'react';
-import firebase, {auth, provider, database} from './firebase';
 import {Link} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
 import './navbar.css';
@@ -16,6 +15,7 @@ import lookup from './img/book.png';
 import lookup_muted from './img/book_muted.png';
 import Nutripedia from "./nutripedia/Nutripedia";
 import Dashboard from "./Dashboard";
+import userEvent from "@testing-library/user-event";
 
 class App extends React.Component {
 
@@ -34,23 +34,21 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        let component = this;
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                const photo_url = user.photoURL;
-                database.ref('users/' + user.uid).once('value').then(function (snapshot) {
-                    component.setState({
-                        user: {
-                            id: user.uid,
-                            email: snapshot.val().email,
-                            first_name: snapshot.val().first_name,
-                            last_name: snapshot.val().last_name,
-                            photo_url: photo_url,
-                        }
-                    })
-                });
-            }
-        })
+         // if (this.props.location.state && this.props.location.state.user) {
+         //     this.setState({
+         //         user: this.props.location.state.user
+         //     })
+         // }
+         // else {
+         //     fetch('http://127.0.0.1:5000/current_user', {
+         //         method: 'Get'
+         //     }).then(response => response.json())
+         //         .then(data => {
+         //             this.setState({
+         //                 user: data
+         //             })
+         //         })
+         // }
     }
 
     switch_section(new_section) {
@@ -76,25 +74,24 @@ class App extends React.Component {
     log_in() {
         const email = this.state.input_email;
         const password = this.state.input_password;
-        console.log(email + ' ' + password);
-        const current_component = this;
         if (this.email_valid(email) && this.password_valid(password)) {
-            auth.signInWithEmailAndPassword(email, password).then(function(user) {
-                const photo_url = user.user.photoURL;
-                database.ref('users/' + user.user.uid).once('value').then(function (snapshot) {
-                    current_component.setState({
-                        user: {
-                            id: user.user.uid,
-                            email: snapshot.val().email,
-                            first_name: snapshot.val().first_name,
-                            last_name: snapshot.val().last_name,
-                            photo_url: photo_url,
-                        }
+            fetch('http://127.0.0.1:5000/sign_in', {
+                method: 'Post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            }).then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    this.setState({
+                        user: data
                     })
-                });
-            }, function (error) {
-                console.log(error);
-            })
+                })
         }
     }
 
@@ -107,13 +104,8 @@ class App extends React.Component {
     }
 
     log_out() {
-        auth.signOut().then(function() {
-            console.log('Signed Out');
-        }, function(error) {
-            console.error('Sign Out Error', error);
-        });
         this.setState({
-            user: null,
+            user: null
         })
     }
 
@@ -122,7 +114,6 @@ class App extends React.Component {
             display: this.state.show_floater ? 'flex' : 'none',
         };
         let section_component;
-        console.log(this.state.user);
         switch (this.state.section) {
             case 'Lookup': section_component = (<Nutripedia user={this.state.user} />); break;
             default: section_component = (<Dashboard user={this.state.user}/>);
@@ -145,7 +136,7 @@ class App extends React.Component {
             </div>
             <div className={'col-md-2'} id={'nav-bar-user-container'} onClick={this.toggle_floater.bind(this)}>
                 <img id={'nav-bar-user-profile-img'} src={this.state.user ? this.state.user.photoURL : null} />
-                <h3 id={'nav-bar-user-title'}>{this.state.user ? this.state.user.first_name + ' ' + this.state.user.last_name : 'Sign In'}</h3>
+                <h3 id={'nav-bar-user-title'}>{this.state.user ? this.state.user.displayName : 'Sign In'}</h3>
                 <img id={'nav-bar-collapse-button-img'} src={collapse} alt={'collapse'} />
             </div>
         </div>
@@ -170,7 +161,7 @@ class App extends React.Component {
             (<div id={'profile-floater-container'} style={profile_floater_style}>
                 <div id={'profile-floater-user-info-wrapper'}>
                     <img id={'profile-floater-user-img'} src={this.state.user ? this.state.user.photoURL : null} />
-                    <h1 id={'profile-floater-username-title'}>{this.state.user ? this.state.user.first_name + ' ' + this.state.user.last_name : 'Not signed in yet'}</h1>
+                    <h1 id={'profile-floater-username-title'}>{this.state.user ? this.state.user.displayName : 'Not signed in yet'}</h1>
                 </div>
                 <div className={'profile-floater-button-wrapper'} id={'profile-floater-manage-wrapper'}>
                     <button type={'button'} className={'profile-floater-button btn'} id={'profile-floater-manage-button'}>Manage your account</button>

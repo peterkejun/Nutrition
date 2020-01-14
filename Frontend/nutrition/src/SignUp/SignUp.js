@@ -16,6 +16,7 @@ class SignUp extends React.Component {
             last_name: '',
             email: '',
             password: '',
+            user: null,
             redirect: false,
         };
         this.create_account = this.create_account.bind(this);
@@ -29,38 +30,30 @@ class SignUp extends React.Component {
     }
 
     create_account() {
-        console.log('creating account');
-        console.log(this.state);
         const first_name = this.state.first_name;
         const last_name = this.state.last_name;
         const email = this.state.email;
-        let current_component = this;
-        if (this.email_valid(email) && this.password_valid(this.state.password)) {
-            console.log('email and password valid');
-            auth.createUserWithEmailAndPassword(email, this.state.password)
-                .then(function(user) {
-                    database.ref('users/' + user.user.uid).set({
-                        email: email,
-                        first_name: first_name,
-                        last_name: last_name,
-                    }).then(function() {
-                        current_component.setState({
-                            redirect: true,
-                        });
-                        console.log(this.state.redirect);
-                    }).catch(error => {
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        console.log('error code: ' + errorCode);
-                        console.log('error message: ' + errorMessage);
+        const password = this.state.password;
+        if (this.email_valid(email) && this.password_valid(password)) {
+            fetch('http://127.0.0.1:5000/sign_up', {
+                method: 'Post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                    display_name: first_name + '\ ' + last_name
+                })
+            }).then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    this.setState({
+                        user: data,
+                        redirect: true
                     })
-                }, function(error) {
-                    // Handle Errors here.
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log('error code: ' + errorCode);
-                    console.log('error message: ' + errorMessage);
-                });
+                })
         }
     }
 
@@ -75,7 +68,12 @@ class SignUp extends React.Component {
 
     render() {
         if (this.state.redirect)
-            return <Redirect push to="/" />;
+            return <Redirect push to={{
+                pathname: '/',
+                state: {
+                    user: this.state.user
+                }
+            }} />;
         return <div id={'sign-up-container'}>
             <div className={'col-4'} id={'sign-up-side-bar'}>
                 <div id={'sign-up-logo-container'}>

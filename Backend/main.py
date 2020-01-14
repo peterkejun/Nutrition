@@ -13,10 +13,12 @@ firebaseConfig = {
     'messagingSenderId': "68103152267",
     'appId': "1:68103152267:web:6783160d9527c0fdc22a8e",
     'measurementId': "G-JJ0458Z4XR",
+    'serviceAccount': './nutrition-e0519-firebase-adminsdk-fiuta-f6db0fcfde.json'
 }
 
 firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
+auth = firebase.auth()
 
 app = flask.Flask(__name__)
 CORS(app)
@@ -92,10 +94,41 @@ def home():
     return "Welcome to python backend for Nutrition"
 
 
+@app.route('/sign_in', methods=['Post'])
+def sign_in():
+    data = request.json
+    if 'email' not in data or 'password' not in data:
+        return 'error: insufficient info', 404
+    user = auth.sign_in_with_email_and_password(data['email'], data['password'])
+    user['displayName'] = db.child('users').child(user['localId']).child('display_name').get().val()
+    return user
+
+
+@app.route('/sign_up', methods=['Post'])
+def sign_up():
+    data = request.json
+    if 'email' not in data or 'password' not in data or 'display_name' not in data:
+        return 'error: insufficient info', 404
+    user = auth.create_user_with_email_and_password(data['email'], data['password'])
+    db.child('users').child(user['localId']).set({
+        'display_name': data['display_name'],
+        'email': data['email']
+    })
+    user['display_name'] = data['display_name']
+    return jsonify(user)
+
+
+@app.route('/current_user', methods=['Get'])
+def current_user():
+    user = auth.current_user
+    print(user)
+    return user
+
+
 # return array of nutrients user had [{id, symbol, unit, name_en, name_fr}]
 @app.route('/user_nutrition_history', methods=['Post'])
 def user_nutrition_history():
-    data = request.get_json()
+    data = request.json
     if 'uid' not in data or 'date' not in data:
         return "error: insufficient info", 404
     history = db.child('nutrition_history').child(data['uid']).child(data['date']).get()
@@ -107,19 +140,19 @@ def user_nutrition_history():
     return jsonify(result)
 
 
-# return info of multiple nutrients [{id, symbol, unit, name_en, name_fr}]
+# return info of multiple nutrients {{id, symbol, unit, name_en, name_fr}}
 @app.route('/nutrients_info', methods=['Post'])
 def nutrients_info():
     data = request.get_json()
     if 'ids' not in data:
         return 'error: no nutrient ids', 403
-    result = []
+    result = {}
     for _id in data['ids']:
         try:
             _id_i = int(_id)
             nutrient = Nutrient(_id)
             if nutrient.valid:
-                result.append(nutrient.json())
+                result[_id_i] = nutrient.json()
         except ValueError:
             continue
     return jsonify(result)
