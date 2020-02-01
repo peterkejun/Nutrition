@@ -15,7 +15,7 @@ import lookup from './img/book.png';
 import lookup_muted from './img/book_muted.png';
 import Nutripedia from "./nutripedia/Nutripedia";
 import Dashboard from "./Dashboard";
-import userEvent from "@testing-library/user-event";
+import LogIn from "./LogIn";
 
 class App extends React.Component {
 
@@ -28,27 +28,12 @@ class App extends React.Component {
             input_email: '',
             input_password: '',
         };
-        this.log_in = this.log_in.bind(this);
-        this.log_out = this.log_out.bind(this);
-        this.handle_input = this.handle_input.bind(this);
     }
 
     componentDidMount() {
-         // if (this.props.location.state && this.props.location.state.user) {
-         //     this.setState({
-         //         user: this.props.location.state.user
-         //     })
-         // }
-         // else {
-         //     fetch('http://127.0.0.1:5000/current_user', {
-         //         method: 'Get'
-         //     }).then(response => response.json())
-         //         .then(data => {
-         //             this.setState({
-         //                 user: data
-         //             })
-         //         })
-         // }
+         if (this.state.user == null) {
+
+         }
     }
 
     switch_section(new_section) {
@@ -65,15 +50,8 @@ class App extends React.Component {
         });
     }
 
-    handle_input(e) {
-        this.setState({
-            [e.target.name]: e.target.value,
-        });
-    }
-
-    log_in() {
-        const email = this.state.input_email;
-        const password = this.state.input_password;
+    log_in = (email, password) => {
+        console.log('email: ' + email + ' password: ' + password);
         if (this.email_valid(email) && this.password_valid(password)) {
             fetch('http://127.0.0.1:5000/sign_in', {
                 method: 'Post',
@@ -90,18 +68,18 @@ class App extends React.Component {
                     console.log(data);
                     this.setState({
                         user: data
-                    })
+                    });
                 })
         }
-    }
+    };
 
-    email_valid(em) {
+    email_valid = (email) => {
         return true;
-    }
+    };
 
-    password_valid(pw) {
+    password_valid = (password) => {
         return true
-    }
+    };
 
     log_out() {
         this.setState({
@@ -156,41 +134,7 @@ class App extends React.Component {
                 </div>
             </div>
         </div>
-        {
-            this.state.user ?
-            (<div id={'profile-floater-container'} style={profile_floater_style}>
-                <div id={'profile-floater-user-info-wrapper'}>
-                    <img id={'profile-floater-user-img'} src={this.state.user ? this.state.user.photoURL : null} />
-                    <h1 id={'profile-floater-username-title'}>{this.state.user ? this.state.user.displayName : 'Not signed in yet'}</h1>
-                </div>
-                <div className={'profile-floater-button-wrapper'} id={'profile-floater-manage-wrapper'}>
-                    <button type={'button'} className={'profile-floater-button btn'} id={'profile-floater-manage-button'}>Manage your account</button>
-                </div>
-                <div className={'profile-floater-button-wrapper'} id={'profile-floater-log-out-wrapper'}>
-                    <button type={'button'} className={'profile-floater-button btn'} id={'profile-floater-log-out-button'} onClick={this.log_out}>Log Out</button>
-                </div>
-            </div>)
-            :
-            (<div id={'profile-floater-container'} style={profile_floater_style}>
-            <div id={'profile-floater-header-wrapper'}>
-                <h1 id={'profile-floater-header-title'}>Connect to<br />Avocado</h1>
-                <img id={'profile-floater-header-logo-img'} src={logo} alt={'logo'} />
-            </div>
-            <div id={'profile-floater-input-container'}>
-                <h2 className={'profile-floater-prompt-title'}>Already a member?</h2>
-                <input type={"username"} name={'input_email'} className="profile-floater-form" id="profile-floater-username-form" placeholder="USERNAME" value={this.state.input_email} onChange={this.handle_input} />
-                <input type={"password"} name={'input_password'} className="profile-floater-form" id="profile-floater-password-form" placeholder="PASSWORD" value={this.state.input_password} onChange={this.handle_input} />
-                <button type={'button'} className={'profile-floater-button btn'} id={'profile-floater-log-in-button'} onClick={this.log_in}>Log In</button>
-                <div id={'profile-floater-or-wrapper'}>
-                    <h2 className={'col-1 profile-floater-prompt-title'}>OR</h2>
-                    <div className={'col-10'} id={'profile-floater-or-break'} />
-                </div>
-                <Link to={'/sign_up'} id={'profile-floater-sign-up-link'}>
-                    <button type={'button'} className={'profile-floater-button btn'} id={'profile-floater-sign-up-button'}>Sign Up</button>
-                </Link>
-            </div>
-        </div>)
-        }
+        <LogIn profile_floater_style={profile_floater_style} user={this.state.user} login={this.log_in} logout={this.log_out}/>
         { section_component }
     </div>)
     }

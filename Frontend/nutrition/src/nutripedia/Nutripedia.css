@@ -85,6 +85,7 @@
 
 .nutrient-wrapper {
     max-height: 16px;
+    min-height: 14px;
     margin-bottom: 14px;
     max-width: 200px;
     overflow-x: hidden;
@@ -98,6 +99,7 @@
     max-width: 200px;
     overflow-x: hidden;
     text-overflow: ellipsis;
+    padding-top: 0;
 }
 
 #nutripedia-right-wrapper {

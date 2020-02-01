@@ -1,5 +1,4 @@
 import React from "react";
-import {database} from "../firebase";
 import search_icon from '../img/search muted.png';
 import './SearchBar.css';
 import './Nutripedia.css';
@@ -9,11 +8,10 @@ class Nutripedia extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.handle_browse_all = this.handle_browse_all.bind(this);
-        this.user = null;
         this.state = {
             nutrients_today: {},
             search_list: [],
-            list: {},
+            list: [],
             selected_nutrient: {},
             random_nutrients: [],
         };
@@ -29,9 +27,9 @@ class Nutripedia extends React.Component {
             //linear search of elements (153 count)
             let search_list = [];
             const uppercase_value = e.target.value.toUpperCase();
-            for (const [id, name] of Object.entries(this.state.list)) {
-                if (name.startsWith(uppercase_value)) {
-                    search_list.push([id, name])
+            for (const nutrient of this.state.list) {
+                if (nutrient['name_en'].startsWith(uppercase_value)) {
+                    search_list.push([nutrient['id'], nutrient['name_en']])
                 }
             }
             search_list.sort(function (a, b) {
@@ -45,31 +43,32 @@ class Nutripedia extends React.Component {
 
     componentDidMount() {
         //fetch all nutrients
-        fetch('http://127.0.0.1:5000/all_nutrients_names_and_ids', {
+        fetch('http://127.0.0.1:5000/all_nutrient_ids_and_names', {
             method: 'Get',
         }).then(response => response.json())
             .then(data => {
+                console.log(data)
                 this.setState({
-                    list: data,
+                    list: data
                 })
-            }).then(() => {
-                //fetch random 6 nutrients' wikipedia summary
-                const arr = Object.entries(this.state.list);
-                let wiki_urls = [];
-                for (let i = 0; i < 6; i++) {
-                    // const rand = Math.floor(Math.random() * 6);
-                    const rand = i + 5;
-                    wiki_urls.push('https://en.wikipedia.org/api/rest_v1/page/summary/' +
-                        arr[rand][1][0] + arr[rand][1].slice(1).toLowerCase() + '?redirect=true');
-                }
-                Promise.all(wiki_urls.map(url => fetch(url, {method: 'Get'}).then(response => response.json())))
-                    .then(data => {
-                        this.setState({
-                            random_nutrients: data,
-                        })
-                    })
-            }
-        )
+            })
+            // .then(() => {
+            //     //fetch random 6 nutrients' wikipedia summary
+            //     const arr = Object.entries(this.state.list);
+            //     let wiki_urls = [];
+            //     for (let i = 0; i < 6; i++) {
+            //         // const rand = Math.floor(Math.random() * 6);
+            //         const rand = i + 5;
+            //         wiki_urls.push('https://en.wikipedia.org/api/rest_v1/page/summary/' +
+            //             arr[rand][1][0] + arr[rand][1].slice(1).toLowerCase() + '?redirect=true');
+            //     }
+            //     Promise.all(wiki_urls.map(url => fetch(url, {method: 'Get'}).then(response => response.json())))
+            //         .then(data => {
+            //             this.setState({
+            //                 random_nutrients: data,
+            //             })
+            //         })
+            // }
     }
 
     select_nutrient(id, name, src) {
@@ -112,33 +111,23 @@ class Nutripedia extends React.Component {
     }
 
     render() {
-        //collect history nutrients
-        if (this.user == null && this.props.user != null) {
-            this.user = this.props.user;
-            const today = new Date();
-            const path = 'nutrition_history/' + this.user.id + '/' + this.date_string(today);
-            const current_component = this;
-            database.ref(path).once('value').then(function (snapshot) {
-                if (snapshot.val() == null) return;
-                console.log(snapshot.val())
-                const ids = snapshot.val().split(':');
-                fetch('http://127.0.0.1:5000/nutrients_names_of_ids', {
-                    method: 'Post',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(ids),
-                }).then(response => response.json())
-                    .then(data => {
-                        console.log(data)
-                        current_component.setState({
-                            nutrients: data,
-                        })
+        if (this.props.user && Object.keys(this.state.nutrients_today).length === 0) {
+            fetch('http://127.0.0.1:5000/user_nutrition_history', {
+                method: 'Post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    localId: this.props.user.localId,
+                    date: '20200114'
+                })
+            }).then(response => response.json())
+                .then(data => {
+                    this.setState({
+                        nutrients_today: data
                     })
-            }, function (error) {
-                console.log(error);
-            });
+                })
         }
         return <div className={'offset-md-2 col-md-10 display-container'} id={'nutripedia-container'}>
             <div className={'col-9'} id={'nutripedia-center-wrapper'}>
@@ -175,11 +164,11 @@ class Nutripedia extends React.Component {
                                         <button className={'btn-sm btn-primary'}>Go to Dashboard</button>
                                     </div>
                                     :
-                                    Object.entries(this.state.nutrients_today).map(([key, value]) => {
-                                    return <div className={'nutrient-wrapper'} key={key}>
-                                        <h3 className={'nutrient-title'}>{value}</h3>
-                                    </div>
-                                })
+                                    Object.keys(this.state.nutrients_today).map((id, key) => (
+                                        <div className={'nutrient-wrapper'} key={key}>
+                                            <h3 className={'nutrient-title'}>{this.state.nutrients_today[id]['info']['name_en']}</h3>
+                                        </div>
+                                    ))
                             }
                         </div>
                     </div>
@@ -215,8 +204,11 @@ class Nutripedia extends React.Component {
             <div className={''} id={'nutripedia-right-wrapper'}>
                 <div id={'nutripedia-right-list-wrapper'}>
                     {
-                        Object.entries(this.state.list).map(([key, value]) =>
-                                <div className={'nutripedia-right-list-item'} key={key} onClick={this.select_nutrient.bind(this, key, value, 'list')}>{value}</div>
+                        this.state.list.map((nutrient, key) =>
+                                <div className={'nutripedia-right-list-item'} key={key}
+                                     onClick={this.select_nutrient.bind(this, nutrient['id'], nutrient['name_en'], 'list')}>
+                                    {nutrient['name_en']}
+                                </div>
                         )
                     }
                 </div>

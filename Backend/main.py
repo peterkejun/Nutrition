@@ -13,7 +13,7 @@ firebaseConfig = {
     'messagingSenderId': "68103152267",
     'appId': "1:68103152267:web:6783160d9527c0fdc22a8e",
     'measurementId': "G-JJ0458Z4XR",
-    'serviceAccount': './nutrition-e0519-firebase-adminsdk-fiuta-f6db0fcfde.json'
+    'serviceAccount': './nutrition-e0519-firebase-adminsdk-fiuta-a7cd2e30ef.json'
 }
 
 firebase = pyrebase.initialize_app(firebaseConfig)
@@ -36,33 +36,34 @@ class Doc:
     # return dict of nutrient info {id, symbol, unit, name_en, name_fr}
     def nutrient_info(self, _id):
         low = 0
-        high = self.nutrition_name_df_sorted_by_name.count() - 1
+        high = len(self.nutrition_name_df_sorted_by_name.index) - 1
         row = -1
         while high >= low:
             m = (low + high) // 2
-            if self.nutrition_name_df_sorted_by_name['NutrientID'].iloc[m] == _id:
-                row = -1
+            if self.nutrition_name_df['NutrientID'].iloc[m] == _id:
+                row = m
                 break
-            elif self.nutrition_name_df_sorted_by_name['NutrientID'].iloc[m] < _id:
+            elif self.nutrition_name_df['NutrientID'].iloc[m] < _id:
                 low = m + 1
-            elif self.nutrition_name_df_sorted_by_name['NutrientID'].iloc[m] > _id:
+            elif self.nutrition_name_df['NutrientID'].iloc[m] > _id:
                 high = m - 1
         if row == -1:
             return -1
         return {
             'id': _id,
-            'symbol': self.nutrition_name_df_sorted_by_name['NutrientSymbol'].iloc[row],
-            'unit': self.nutrition_name_df_sorted_by_name['NutrientUnit'].iloc[row],
-            'name_en': self.nutrition_name_df_sorted_by_name['NutrientName'].iloc[row],
-            'name_fr': self.nutrition_name_df_sorted_by_name['NutrientNameF'].iloc[row]
+            'symbol': self.nutrition_name_df['NutrientSymbol'].iloc[row],
+            'unit': self.nutrition_name_df['NutrientUnit'].iloc[row],
+            'name_en': self.nutrition_name_df['NutrientName'].iloc[row],
+            'name_fr': self.nutrition_name_df['NutrientNameF'].iloc[row]
         }
 
     # return array of id and name of all nutrients [{id, name_en, name_fr}]
-    def ids_and_names(self):
+    def ids_and_names(self, serializable=False):
         result = []
         for i in range(len(self.nutrition_name_df_sorted_by_name['NutrientName'])):
             result.append({
-                'id': self.nutrition_name_df_sorted_by_name['NutrientID'][i],
+                'id': int(self.nutrition_name_df_sorted_by_name['NutrientID'][i]) if serializable
+                else self.nutrition_name_df_sorted_by_name['NutrientID'][i],
                 'name_en': self.nutrition_name_df_sorted_by_name['NutrientName'][i],
                 'name_fr': self.nutrition_name_df_sorted_by_name['NutrientNameF'][i],
             })
@@ -121,7 +122,6 @@ def sign_up():
 @app.route('/current_user', methods=['Get'])
 def current_user():
     user = auth.current_user
-    print(user)
     return user
 
 
@@ -129,15 +129,24 @@ def current_user():
 @app.route('/user_nutrition_history', methods=['Post'])
 def user_nutrition_history():
     data = request.json
-    if 'uid' not in data or 'date' not in data:
-        return "error: insufficient info", 404
-    history = db.child('nutrition_history').child(data['uid']).child(data['date']).get()
-    result = []
-    for _id in history:
-        nutrient = Nutrient(_id)
-        if nutrient.valid:
-            result.append(nutrient.json())
-    return jsonify(result)
+    if 'type' not in data or 'localId' not in data:
+        return 'error: insufficient info', 404
+    if data['type'] == 'day':
+        if 'date' not in data:
+            return "error: insufficient info", 404
+        history = db.child('nutrition_history').child(data['localId']).child(data['date']).get()
+        result = dict(history.val())
+        for _id in result:
+            nutrient = Nutrient(int(_id))
+            if nutrient.valid:
+                result[_id] = {
+                    'amount': result[_id],
+                    'info': nutrient.json()
+                }
+        return jsonify(result)
+    elif data['type'] == 'range':
+        if 'start_date' not in data or 'end_date' not in data:
+            return 'error: insufficient info', 404
 
 
 # return info of multiple nutrients {{id, symbol, unit, name_en, name_fr}}
@@ -161,7 +170,7 @@ def nutrients_info():
 # return id and name of all nutrients [{id, name_en, name_fr}]
 @app.route('/all_nutrient_ids_and_names', methods=['Get'])
 def all_nutrients_ids_and_names():
-    return jsonify(doc.ids_and_names())
+    return jsonify(doc.ids_and_names(serializable=True))
 
 
 app.run()

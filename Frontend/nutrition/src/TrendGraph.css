@@ -1,0 +1,50 @@
+#vert-axis-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#trend-graph-container {
+    /*height: 400px;*/
+}
+
+
+
+#vert-axis-graph-row {
+    margin-right: 15px;
+}
+
+#vert-axis-title {
+    color: white;
+    font-size: 12px;
+    font-weight: 800;
+    transform-origin: center center;
+    transform: rotateZ(-90deg) translateX(-50%);
+    margin-bottom: 0;
+}
+
+#graph-container {
+    height: 250px;
+}
+
+#horiz-axis-row {
+    margin: 20px 0 0 0;
+}
+
+#horiz-axis-title {
+    color: white;
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
+}
+
+#graph-canvas {
+    z-index: 1;
+    position: absolute;
+}
+
+#thumb-canvas {
+    z-index: 2;
+    position: absolute;
+}
