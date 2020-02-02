@@ -1,9 +1,10 @@
 import pyrebase
 import flask
-import pandas as pd
 from flask import request, jsonify
 from flask_cors import CORS
+import sqlite3
 
+# user database (firebase)
 firebaseConfig = {
     'apiKey': "AIzaSyBgIHPqBmY7nYJqBkv_2jI1aTMxUWTo75g",
     'authDomain': "nutrition-e0519.firebaseapp.com",
@@ -15,11 +16,11 @@ firebaseConfig = {
     'measurementId': "G-JJ0458Z4XR",
     'serviceAccount': './nutrition-e0519-firebase-adminsdk-fiuta-a7cd2e30ef.json'
 }
-
 firebase = pyrebase.initialize_app(firebaseConfig)
-db = firebase.database()
+user_db = firebase.database()
 auth = firebase.auth()
 
+# Flask
 app = flask.Flask(__name__)
 CORS(app)
 app.config['Debug'] = True
@@ -27,45 +28,38 @@ app.config['Debug'] = True
 
 class Doc:
     def __init__(self):
-        self.food_name_df = pd.read_csv('./dataset/FOOD NAME.csv', encoding="utf-8")
-        self.nutrition_amount_df = pd.read_csv('./dataset/NUTRIENT AMOUNT.csv', encoding='utf-8')
-        self.nutrition_name_df = pd.read_csv('./dataset/NUTRIENT NAME.csv', encoding='utf-8').sort_values('NutrientID')
-        self.food_group_df = pd.read_csv('./dataset/FOOD GROUP.csv', encoding="utf-8")
-        self.nutrition_name_df_sorted_by_name = self.nutrition_name_df.sort_values('NutrientName')
+        self.conn = sqlite3.connect('./dataset/nutrition.sqlite')
+        self.conn.row_factory = sqlite3.Row
 
     # return dict of nutrient info {id, symbol, unit, name_en, name_fr}
     def nutrient_info(self, _id):
-        low = 0
-        high = len(self.nutrition_name_df_sorted_by_name.index) - 1
-        row = -1
-        while high >= low:
-            m = (low + high) // 2
-            if self.nutrition_name_df['NutrientID'].iloc[m] == _id:
-                row = m
-                break
-            elif self.nutrition_name_df['NutrientID'].iloc[m] < _id:
-                low = m + 1
-            elif self.nutrition_name_df['NutrientID'].iloc[m] > _id:
-                high = m - 1
-        if row == -1:
-            return -1
+        cursor = self.conn.cursor()
+        cursor.execute(
+            'select NutrientSymbol, NutrientName, NutrientNameF, NutrientUnit '
+            'from nutrient_name '
+            'where NutrientID = ?', (_id,))
+        res = cursor.fetchone()
         return {
             'id': _id,
-            'symbol': self.nutrition_name_df['NutrientSymbol'].iloc[row],
-            'unit': self.nutrition_name_df['NutrientUnit'].iloc[row],
-            'name_en': self.nutrition_name_df['NutrientName'].iloc[row],
-            'name_fr': self.nutrition_name_df['NutrientNameF'].iloc[row]
+            'symbol': res[0],
+            'name_en': res[1],
+            'name_fr': res[2],
+            'unit': res[3]
         }
 
     # return array of id and name of all nutrients [{id, name_en, name_fr}]
     def ids_and_names(self, serializable=False):
+        cursor = self.conn.cursor()
+        cursor.execute(
+            'select NutrientID, NutrientName, NutrientNameF '
+            'from nutrient_name'
+        )
         result = []
-        for i in range(len(self.nutrition_name_df_sorted_by_name['NutrientName'])):
+        for row in cursor.fetchall():
             result.append({
-                'id': int(self.nutrition_name_df_sorted_by_name['NutrientID'][i]) if serializable
-                else self.nutrition_name_df_sorted_by_name['NutrientID'][i],
-                'name_en': self.nutrition_name_df_sorted_by_name['NutrientName'][i],
-                'name_fr': self.nutrition_name_df_sorted_by_name['NutrientNameF'][i],
+                'id': row['NutrientID'],
+                'name_en': row['NutrientName'],
+                'name_fr': row['NutrientNameF']
             })
         return result
 
@@ -101,7 +95,7 @@ def sign_in():
     if 'email' not in data or 'password' not in data:
         return 'error: insufficient info', 404
     user = auth.sign_in_with_email_and_password(data['email'], data['password'])
-    user['displayName'] = db.child('users').child(user['localId']).child('display_name').get().val()
+    user['displayName'] = user_db.child('users').child(user['localId']).child('display_name').get().val()
     return user
 
 
@@ -111,7 +105,7 @@ def sign_up():
     if 'email' not in data or 'password' not in data or 'display_name' not in data:
         return 'error: insufficient info', 404
     user = auth.create_user_with_email_and_password(data['email'], data['password'])
-    db.child('users').child(user['localId']).set({
+    user_db.child('users').child(user['localId']).set({
         'display_name': data['display_name'],
         'email': data['email']
     })
@@ -134,7 +128,7 @@ def user_nutrition_history():
     if data['type'] == 'day':
         if 'date' not in data:
             return "error: insufficient info", 404
-        history = db.child('nutrition_history').child(data['localId']).child(data['date']).get()
+        history = user_db.child('nutrition_history').child(data['localId']).child(data['date']).get()
         result = dict(history.val())
         for _id in result:
             nutrient = Nutrient(int(_id))
