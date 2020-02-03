@@ -5,3 +5,5 @@ venv
 Backend/nutrition-e0519-firebase-adminsdk-fiuta-a7cd2e30ef.json
 Backend/dataset
 
+# modules
+/node_modules

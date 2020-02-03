@@ -1,5 +1,5 @@
 from graphene_sqlalchemy import SQLAlchemyObjectType
-from Backend.database.models import ModelFoodName, ModelNutrientName
+from Backend.models import ModelFoodName, ModelNutrientName
 import graphene
 
 
@@ -20,7 +20,7 @@ class NutrientName(SQLAlchemyObjectType, NutrientNameAttributes):
 
     class Meta:
         model = ModelNutrientName
-        interfaces = (graphene.relay.node,)
+        interfaces = (graphene.relay.Node,)
 
 
 # food name
@@ -42,4 +42,4 @@ class FoodName(SQLAlchemyObjectType, FoodNameAttributes):
 
     class Meta:
         model = ModelFoodName
-        interfaces = (graphene.relay.node,)
+        interfaces = (graphene.relay.Node,)

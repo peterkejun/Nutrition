@@ -2,7 +2,9 @@ import pyrebase
 import flask
 from flask import request, jsonify
 from flask_cors import CORS
-import sqlite3
+from flask_graphql import GraphQLView
+from models import db_session
+from schema import schema
 
 # user database (firebase)
 firebaseConfig = {
@@ -23,64 +25,17 @@ auth = firebase.auth()
 # Flask
 app = flask.Flask(__name__)
 CORS(app)
-app.config['Debug'] = True
-
-
-class Doc:
-    def __init__(self):
-        self.conn = sqlite3.connect('./dataset/nutrition.sqlite')
-        self.conn.row_factory = sqlite3.Row
-
-    # return dict of nutrient info {id, symbol, unit, name_en, name_fr}
-    def nutrient_info(self, _id):
-        cursor = self.conn.cursor()
-        cursor.execute(
-            'select NutrientSymbol, NutrientName, NutrientNameF, NutrientUnit '
-            'from nutrient_name '
-            'where NutrientID = ?', (_id,))
-        res = cursor.fetchone()
-        return {
-            'id': _id,
-            'symbol': res[0],
-            'name_en': res[1],
-            'name_fr': res[2],
-            'unit': res[3]
-        }
-
-    # return array of id and name of all nutrients [{id, name_en, name_fr}]
-    def ids_and_names(self, serializable=False):
-        cursor = self.conn.cursor()
-        cursor.execute(
-            'select NutrientID, NutrientName, NutrientNameF '
-            'from nutrient_name'
-        )
-        result = []
-        for row in cursor.fetchall():
-            result.append({
-                'id': row['NutrientID'],
-                'name_en': row['NutrientName'],
-                'name_fr': row['NutrientNameF']
-            })
-        return result
-
-
-doc = Doc()
-
-
-# id, name_en, name_fr, symbol, unit,
-class Nutrient:
-    def __init__(self, _id):
-        self.id = _id
-        self.info = doc.nutrient_info(_id)
-        if self.info == -1:
-            self.valid = False
-        else:
-            self.valid = True
-
-    def json(self):
-        if not self.valid:
-            return -1
-        return self.info
+app.debug = True
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///nutrition.sqlite'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.add_url_rule(
+    '/graphql',
+    view_func=GraphQLView.as_view(
+        '/graphql',
+        schema=schema,
+        graphiql=True
+    )
+)
 
 
 # home URL
@@ -165,6 +120,11 @@ def nutrients_info():
 @app.route('/all_nutrient_ids_and_names', methods=['Get'])
 def all_nutrients_ids_and_names():
     return jsonify(doc.ids_and_names(serializable=True))
+
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
 
 
 app.run()
