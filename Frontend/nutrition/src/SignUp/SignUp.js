@@ -1,5 +1,4 @@
 import React from "react";
-import {auth, provider, database} from "../firebase";
 import 'bootstrap/dist/css/bootstrap.css';
 import './SignUp.css'
 import logo from "../img/avocado.svg";

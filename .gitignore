@@ -1,9 +1,11 @@
 # environments
 venv
 
-# firebase private key
-Backend/nutrition-e0519-firebase-adminsdk-fiuta-a7cd2e30ef.json
+# dev data
 Backend/dataset
+
+# credentials
+Backend/gmail_credentials.json
 
 # modules
 /node_modules

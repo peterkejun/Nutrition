@@ -1,9 +1,15 @@
 #dashboard-container {
     z-index: 0;
-    height: 100vh;
+    min-height: 100vh;
     margin-top: 52px;
-    padding: 23px 14px;
-    background: #5C9E69;
+    /*padding: 23px 14px;*/
+    padding: 0;
+    background: #42A063;
+}
+
+#dashboard-wrapper {
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 #dashboard-wrapper .row {
@@ -22,7 +28,7 @@
 }
 
 .first-nutrient-inner-wrapper, #graph-nutrients-inner-wrapper {
-    background-color: #3C6F60;
+    background-color: #25715F;
     padding-bottom: 10px;
     border-radius: 8px;
     box-shadow: 0 2px 8px 0 rgba(0,0,0,0.14);
@@ -83,8 +89,8 @@
 }
 
 .first-nutrient-trend-title {
-    color: #3C6F60;
-    background-color: rgba(125,206,130,0.6);
+    color: #25715F;
+    background-color: rgba(94,209,121,0.6);
     padding: 4px 10px;
     border-radius: 8px;
 }
@@ -95,7 +101,7 @@
 }
 
 #portion-nutrients-inner-wrapper {
-    background-color: #3C6F60;
+    background-color: #25715F;
     padding-bottom: 10px;
     border-radius: 8px;
     box-shadow: 0 2px 8px 0 rgba(0,0,0,0.14);

@@ -1,5 +1,4 @@
 import React from "react";
-import {auth} from './firebase';
 import Circle from 'react-circle';
 import Carbohydrates from './img/Carbohydrates.svg';
 import Protein from './img/Protein.svg';
@@ -7,6 +6,7 @@ import Fat from './img/Fat.svg';
 import Vitamins from './img/Vitamins.svg';
 import './Dashboard.css';
 import TrendGraph from "./TrendGraph.js";
+import FoodEntry from "./FoodEntry";
 
 class Dashboard extends React.Component {
 
@@ -63,7 +63,8 @@ class Dashboard extends React.Component {
         }
 
         return <div className={'offset-2 col-10'} id={'dashboard-container'}>
-            <div className={'container-fluid'} id={'dashboard-wrapper'}>
+            <FoodEntry />
+            <div className={'container'} id={'dashboard-wrapper'}>
                 <div className={'row'}>
                     {
                         first_nutrients.map((info, key) => (

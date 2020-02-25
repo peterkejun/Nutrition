@@ -38,7 +38,7 @@
     margin: 0 0 0 13px;
     font-size: 15px;
     font-weight: 800;
-    color: #4C8056;
+    color: #388252;
 }
 
 #nav-bar-logo-img {
@@ -50,6 +50,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    transition: 0.3s;
 }
 
 #nav-bar-search-img {
@@ -59,7 +60,7 @@
 }
 
 #nav-bar-search-placeholder {
-    color: #4C8056;
+    color: #388252;
     font-size: 14px;
     font-weight: 600;
     margin: 0;
@@ -83,6 +84,11 @@
     justify-content: flex-start;
     align-items: center;
     cursor: pointer;
+    transition: 0.3s;
+}
+
+#nav-bar-user-container:hover {
+     background-color: #E8F3E8;
 }
 
 #nav-bar-user-profile-img {
@@ -103,4 +109,5 @@
 #nav-bar-collapse-button-img {
     width: 8px;
     height: 4px;
+    transition: 0.3s;
 }

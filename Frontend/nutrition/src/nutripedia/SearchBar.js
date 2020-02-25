@@ -21,7 +21,8 @@ class SearchBar extends React.Component {
         return <div id={'search-bar-container'}>
             <div id={'search-bar-wrapper'}>
                 <img id={'search-bar-icon-img'} src={search_icon} alt={'search'} />
-                <input type={'search'} name={'search'} id={'search-bar-form'} placeholder={'Find a nutrient'} value={this.state.search_content} onChange={this.handle_input} />
+                <input type={'search'} name={'search'} id={'search-bar-form'} placeholder={'Find a nutrient'}
+                       value={this.state.search_content} onChange={this.handle_input} />
             </div>
             <div id={'search-bar-dropdown-container'} style={{display: this.props.list.length === 0 ? 'none' : 'block'}}>
                 <ul id={'search-bar-list'}>

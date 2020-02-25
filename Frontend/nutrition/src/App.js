@@ -1,9 +1,7 @@
 import React from 'react';
-import {Link} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
 import './navbar.css';
 import './sidebar.css';
-import './ProfileFloater.css';
 import logo from './img/avocado.svg';
 import search from './img/search.png';
 import bell from './img/bell.png';
@@ -89,7 +87,7 @@ class App extends React.Component {
 
     render() {
         const profile_floater_style = {
-            display: this.state.show_floater ? 'flex' : 'none',
+            transform: this.state.show_floater ? 'translateY(0%)' : 'translateY(-100%)',
         };
         let section_component;
         switch (this.state.section) {
@@ -115,7 +113,7 @@ class App extends React.Component {
             <div className={'col-md-2'} id={'nav-bar-user-container'} onClick={this.toggle_floater.bind(this)}>
                 <img id={'nav-bar-user-profile-img'} src={this.state.user ? this.state.user.photoURL : null} />
                 <h3 id={'nav-bar-user-title'}>{this.state.user ? this.state.user.displayName : 'Sign In'}</h3>
-                <img id={'nav-bar-collapse-button-img'} src={collapse} alt={'collapse'} />
+                <img id={'nav-bar-collapse-button-img'} style={{transform: this.state.show_floater ? 'rotate(180deg)' : 'none'}} src={collapse} alt={'collapse'} />
             </div>
         </div>
         <div className={'col-md-2'} id={'side-bar'}>

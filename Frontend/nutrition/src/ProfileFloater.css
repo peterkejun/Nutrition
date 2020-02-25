@@ -1,4 +1,4 @@
-#profile-floater-container {
+.profile-floater-container {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -7,10 +7,20 @@
     background-color: #F9FBF9;
     border: solid 1px #E7EEE8;
     z-index: 2;
-    position: absolute;
-    top: 51px;
-    right: 10px;
+    position: fixed;
+    transform: translateY(-100%);
+    transition: 0.3s;
+    right: 0;
     box-shadow: 0px 1px 8px -1px rgba(180,180,180,1);
+}
+
+@keyframes moveIn {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(100%);
+    }
 }
 
 #profile-floater-header-wrapper {
@@ -32,7 +42,7 @@
 }
 
 #profile-floater-header-title {
-    color: #527F72;
+    color: #438071;
     font-size: 17px;
     font-weight: 900;
     margin-left: 10px;
@@ -67,6 +77,16 @@
     border-radius: 6px;
     margin-top: 7px;
     padding: 8px 15px;
+    transition: 0.1s;
+}
+
+.profile-floater-form:focus {
+    border-color: #5C9E69;
+    outline: none;
+}
+
+.profile-floater-form:hover {
+    background: #FAFAFA;
 }
 
 .profile-floater-form::placeholder {
@@ -96,13 +116,14 @@
 
 #profile-floater-log-in-button {
     margin-top: 7px;
-    background-color: #57A169;
+    background-color: #36A363;
     color: white;
 }
 
 #profile-floater-sign-up-button {
-    background-color: #F9EAB0;
+    background-color: #FCE9A8;
     color: #565656;
+    border: 1px solid #D0B18E;
 }
 
 #profile-floater-user-img {
@@ -140,15 +161,61 @@
 }
 
 #profile-floater-manage-button {
-    background-color: #527F72;
+    background-color: #438071;
     color: white;
 }
 
 #profile-floater-log-out-button {
-    background-color: #C76D5B;
+    background-color: #D56755;
     color: white;
 }
 
 #profile-floater-sign-up-link {
     width: 100%;
+}
+
+#verification-sent-title {
+    color: #9E9E9E;
+    font-size: 10px;
+    font-weight: 600;
+    width: 100%;
+    text-align: center;
+}
+
+#email-title {
+    color: black;
+    font-size: 10px;
+    font-weight: 800;
+    width: 100%;
+    text-align: center;
+}
+
+#email-input-separator {
+    width: 90%;
+    background-color: #E7EEE8;
+}
+
+#enter-code-prompt-title {
+    color: #388252;
+    font-size: 9px;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+#expire-title {
+    color: #9E9E9E;
+    margin: 8px 40px;
+    text-align: center;
+    font-size: 9px;
+    font-weight: 500;
+}
+
+#profile-floater-log-out-wrapper {
+    border: none;
+}
+
+#profile-floater-verify-button {
+    background-color: #36A363;
+    color: white;
+    border-radius: 6px;
 }
