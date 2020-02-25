@@ -18,15 +18,15 @@ A nutrition website that keeps track of user's nutrition consumption and provide
 ## Stack
 ### In Use
 #### Backend
-* Flask (Python) [ℹ](https://flask.palletsprojects.com/en/1.1.x/)
-* SQLAlchemy [ℹ](https://www.sqlalchemy.org/)
-* Graphene [ℹ](https://graphene-python.org/)
-* SQLite3 [ℹ](https://www.sqlite.org/index.html)
-* DynamoDB [ℹ](https://aws.amazon.com/dynamodb/?sc_channel=PS&sc_campaign=acquisition_CA&sc_publisher=google&sc_medium=dynamodb_hv_b&sc_content=dynamodb_e&sc_detail=dynamodb&sc_category=dynamodb&sc_segment=73324893296&sc_matchtype=e&sc_country=CA&s_kwcid=AL!4422!3!73324893296!e!!g!!dynamodb&ef_id=CjwKCAiAhc7yBRAdEiwAplGxXyR0XFZXyHneV6RUd7qsRX7j3LuqgtkGa5w3DBL2o-oDEFQQWNI-nRoC1bYQAvD_BwE:G:s)
+* Flask (Python) [🌶](https://flask.palletsprojects.com/en/1.1.x/)
+* SQLAlchemy [🧪](https://www.sqlalchemy.org/)
+* Graphene [♟](https://graphene-python.org/)
+* SQLite3 [🖋](https://www.sqlite.org/index.html)
+* DynamoDB [🍔](https://aws.amazon.com/dynamodb/?sc_channel=PS&sc_campaign=acquisition_CA&sc_publisher=google&sc_medium=dynamodb_hv_b&sc_content=dynamodb_e&sc_detail=dynamodb&sc_category=dynamodb&sc_segment=73324893296&sc_matchtype=e&sc_country=CA&s_kwcid=AL!4422!3!73324893296!e!!g!!dynamodb&ef_id=CjwKCAiAhc7yBRAdEiwAplGxXyR0XFZXyHneV6RUd7qsRX7j3LuqgtkGa5w3DBL2o-oDEFQQWNI-nRoC1bYQAvD_BwE:G:s)
 #### Frontend
-* React [ℹ](https://reactjs.org/)
-* Bootstrap [ℹ](https://getbootstrap.com/)
+* React [⚛️](https://reactjs.org/)
+* Bootstrap [Ⓑ](https://getbootstrap.com/)
 ### To Be Added
-* Redux [ℹ](https://redux.js.org/)
+* Redux [⚛︎](https://redux.js.org/)
 * Machine Learning
 
